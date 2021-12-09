@@ -1,8 +1,24 @@
 package com.hospitalcrm.mainapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class DoctorExperience {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DoctorExperience that = (DoctorExperience) o;
+        return startPracticingDate == that.startPracticingDate &&
+                doctorId.equals(that.doctorId) &&
+                branchId.equals(that.branchId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(doctorId, branchId, startPracticingDate);
+    }
+
     private UUID doctorId;
     private UUID branchId;
     private int startPracticingDate;

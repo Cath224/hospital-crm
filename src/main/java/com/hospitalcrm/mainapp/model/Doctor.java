@@ -1,5 +1,6 @@
 package com.hospitalcrm.mainapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Doctor {
@@ -57,5 +58,23 @@ public class Doctor {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Doctor doctor = (Doctor) o;
+        return birthday == doctor.birthday &&
+                id.equals(doctor.id) &&
+                officeId.equals(doctor.officeId) &&
+                firstName.equals(doctor.firstName) &&
+                lastName.equals(doctor.lastName) &&
+                gender.equals(doctor.gender);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, officeId, firstName, lastName, gender, birthday);
     }
 }

@@ -1,5 +1,6 @@
 package com.hospitalcrm.mainapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class DiagnosisMeddicine {
@@ -38,5 +39,21 @@ public class DiagnosisMeddicine {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiagnosisMeddicine that = (DiagnosisMeddicine) o;
+        return number == that.number &&
+                diagnosisId.equals(that.diagnosisId) &&
+                medicineId.equals(that.medicineId) &&
+                description.equals(that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(diagnosisId, medicineId, description, number);
     }
 }

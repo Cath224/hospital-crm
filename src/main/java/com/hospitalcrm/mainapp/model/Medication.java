@@ -1,5 +1,6 @@
 package com.hospitalcrm.mainapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Medication {
@@ -75,5 +76,25 @@ public class Medication {
 
     public void setContraindications(String contraindications) {
         this.contraindications = contraindications;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Medication that = (Medication) o;
+        return number == that.number &&
+                id.equals(that.id) &&
+                branchId.equals(that.branchId) &&
+                name.equals(that.name) &&
+                description.equals(that.description) &&
+                serialNumber.equals(that.serialNumber) &&
+                indications.equals(that.indications) &&
+                contraindications.equals(that.contraindications);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, branchId, name, description, serialNumber, indications, contraindications, number);
     }
 }
