@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: Hospital CRM
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: password
+    host: localhost
+    port: 5432
+    rdms-url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}
+    database-name: hospital
+    rdms-url-full: ${spring.datasource.rdms-url}/${spring.datasource.database-name}
