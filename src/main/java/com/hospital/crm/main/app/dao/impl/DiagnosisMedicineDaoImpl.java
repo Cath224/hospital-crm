@@ -24,6 +24,7 @@ public class DiagnosisMedicineDaoImpl implements DiagnosisMedicineDao {
 
     private static final String SELECT_BY_ID = "SELECT * FROM hospital_crm.diagnosis_medicine WHERE diagnosis_id = ? AND medicine_id = ?";
     private static final String SELECT_ALL = "SELECT * FROM hospital_crm.diagnosis_medicine";
+    private static final String DELETE_ALL = "DELETE FROM hospital_crm.diagnosis_medicine";
     private static final String SELECT_WHERE = " WHERE %s";
     private static final String INSERT = "INSERT INTO hospital_crm.diagnosis_medicine (diagnosis_id, medicine_id, number, description) values(?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE hospital_crm.diagnosis_medicine SET (number, description) = (?, ?) WHERE diagnosis_id = ? AND medicine_id = ?";
@@ -95,5 +96,37 @@ public class DiagnosisMedicineDaoImpl implements DiagnosisMedicineDao {
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());
+    }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        if (filter == null || filter.isEmpty()) {
+            jdbcTemplate.update(DELETE_ALL);
+        }
+        int size = filter.size();
+        List<String> conditions = new ArrayList<>(size);
+        String diagnosisId = filter.get("diagnosis_id");
+        List<Object> values = new ArrayList<>(size);
+        if (diagnosisId != null) {
+            conditions.add("diagnosis_id = ?");
+            values.add(UUID.fromString(diagnosisId));
+        }
+        String medicineId = filter.get("medicine_id");
+        if (medicineId != null) {
+            conditions.add("medicine_id = ?");
+            values.add(UUID.fromString(medicineId));
+        }
+        String number = filter.get("number");
+        if (number != null) {
+            conditions.add("number = ?");
+            values.add(Integer.valueOf(number));
+        }
+        String description = filter.get("description");
+        if (description != null) {
+            conditions.add("description = ?");
+            values.add(description);
+        }
+        jdbcTemplate.update(String.format(DELETE_ALL + SELECT_WHERE,
+                String.join(" AND ", conditions)), values.toArray());
     }
 }

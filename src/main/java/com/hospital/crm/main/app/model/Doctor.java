@@ -2,12 +2,13 @@ package com.hospital.crm.main.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Doctor extends Person {
-
+    @NotNull
     private UUID officeId;
 
     public UUID getOfficeId() {

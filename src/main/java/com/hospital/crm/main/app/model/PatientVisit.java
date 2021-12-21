@@ -2,6 +2,8 @@ package com.hospital.crm.main.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -10,9 +12,12 @@ import java.util.UUID;
 public class PatientVisit {
 
     private UUID id;
+    @NotNull
     private UUID doctorId;
+    @NotNull
     private UUID patientId;
     private LocalDateTime actualTimestamp;
+    @NotBlank
     private LocalDateTime planedTimestamp;
 
 

@@ -24,6 +24,7 @@ public class PatientVisitDaoImpl implements PatientVisitDao {
     private static final String SELECT_BY_ID = "SELECT * FROM hospital_crm.patient_visit WHERE id = ?";
     private static final String SELECT_BY_IDS = "SELECT * FROM hospital_crm.patient_visit WHERE id in (?)";
     private static final String SELECT_ALL = "SELECT * FROM hospital_crm.patient_visit";
+    private static final String DELETE_ALL = "DELETE FROM hospital_crm.patient_visit";
     private static final String SELECT_WHERE = " WHERE %s";
     private static final String INSERT = "INSERT INTO hospital_crm.patient_visit (doctor_id, patient_id, actual_timestamp, planed_timestamp) values(?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE hospital_crm.patient_visit SET (doctor_id, patient_id, actual_timestamp, planed_timestamp) = (?, ?, ?, ?) WHERE id = ?";
@@ -102,6 +103,43 @@ public class PatientVisitDaoImpl implements PatientVisitDao {
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());
+    }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        if (filter == null || filter.isEmpty()) {
+            jdbcTemplate.update(DELETE_ALL);
+        }
+        int size = filter.size();
+        List<String> conditions = new ArrayList<>(size);
+        String idValue = filter.get("id");
+        List<Object> values = new ArrayList<>(size);
+        if (idValue != null) {
+            conditions.add("id = ?");
+            values.add(UUID.fromString(idValue));
+        }
+        String doctorId = filter.get("doctor_id");
+        if (doctorId != null) {
+            conditions.add("doctor_id = ?");
+            values.add(UUID.fromString(doctorId));
+        }
+        String patientId = filter.get("patient_id");
+        if (patientId != null) {
+            conditions.add("patient_id = ?");
+            values.add(UUID.fromString(patientId));
+        }
+        String actualTimestamp = filter.get("actual_timestamp");
+        if (actualTimestamp != null) {
+            conditions.add("actual_timestamp = ?");
+            values.add(LocalDateTime.parse(actualTimestamp));
+        }
+        String planedTimestamp = filter.get("planed_timestamp");
+        if (actualTimestamp != null) {
+            conditions.add("planed_timestamp = ?");
+            values.add(LocalDateTime.parse(planedTimestamp));
+        }
+        jdbcTemplate.update(String.format(DELETE_ALL + SELECT_WHERE,
+                String.join(" AND ", conditions)), values.toArray());
     }
 
     @Override

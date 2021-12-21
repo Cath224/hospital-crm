@@ -29,4 +29,9 @@ public abstract class BaseEntityServiceImpl<E> implements BaseEntityService<E> {
     public List<E> get(Map<String, String> filter) {
         return baseEntityDao.get(filter);
     }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        baseEntityDao.delete(filter);
+    }
 }

@@ -23,6 +23,7 @@ public class BranchDaoImpl implements BranchDao {
     private static final String SELECT_BY_IDS = "SELECT * FROM hospital_crm.branch WHERE id in (?)";
     private static final String SELECT_ALL = "SELECT * FROM hospital_crm.branch";
     private static final String SELECT_WHERE = " WHERE %s";
+    private static final String DELETE_ALL = "DELETE FROM hospital_crm.branch";
     private static final String INSERT = "INSERT INTO hospital_crm.branch (name) values(?)";
     private static final String UPDATE = "UPDATE hospital_crm.branch SET (name) = (?) WHERE id = ?";
     private static final String DELETE = "DELETE FROM hospital_crm.branch WHERE id = ?";
@@ -77,6 +78,28 @@ public class BranchDaoImpl implements BranchDao {
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());
+    }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        if (filter == null || filter.isEmpty()) {
+            jdbcTemplate.update(DELETE_ALL);
+        }
+        int size = filter.size();
+        List<String> conditions = new ArrayList<>(size);
+        String idValue = filter.get("id");
+        List<Object> values = new ArrayList<>(size);
+        if (idValue != null) {
+            conditions.add("id = ?");
+            values.add(UUID.fromString(idValue));
+        }
+        String nameValue = filter.get("name");
+        if (nameValue != null) {
+            conditions.add("name = ?");
+            values.add(nameValue);
+        }
+        jdbcTemplate.update(String.format(DELETE_ALL + SELECT_WHERE,
+                String.join(" AND ", conditions)), values.toArray());
     }
 
     @Override

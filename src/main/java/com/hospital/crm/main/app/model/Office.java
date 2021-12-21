@@ -2,6 +2,7 @@ package com.hospital.crm.main.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 public class Office {
 
     private UUID id;
+    @NotBlank
     private String name;
     private int number;
 

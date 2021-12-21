@@ -23,6 +23,7 @@ public class DiagnosisDaoImpl implements DiagnosisDao {
     private static final String SELECT_BY_IDS = "SELECT * FROM hospital_crm.diagnosis WHERE id in (?)";
     private static final String SELECT_ALL = "SELECT * FROM hospital_crm.diagnosis";
     private static final String SELECT_WHERE = " WHERE %s";
+    private static final String DELETE_ALL = "DELETE FROM hospital_crm.diagnosis";
     private static final String INSERT = "INSERT INTO hospital_crm.diagnosis (description, patient_visit_id) values(?, ?)";
     private static final String UPDATE = "UPDATE hospital_crm.diagnosis SET (description, patient_visit_id) = (?, ?) WHERE id = ?";
     private static final String DELETE = "DELETE FROM hospital_crm.diagnosis WHERE id = ?";
@@ -84,6 +85,33 @@ public class DiagnosisDaoImpl implements DiagnosisDao {
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());
+    }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        if (filter == null || filter.isEmpty()) {
+            jdbcTemplate.update(DELETE_ALL);
+        }
+        int size = filter.size();
+        List<String> conditions = new ArrayList<>(size);
+        String idValue = filter.get("id");
+        List<Object> values = new ArrayList<>(size);
+        if (idValue != null) {
+            conditions.add("id = ?");
+            values.add(UUID.fromString(idValue));
+        }
+        String description = filter.get("description");
+        if (description != null) {
+            conditions.add("description = ?");
+            values.add(description);
+        }
+        String patientVisitId = filter.get("patient_visit_id");
+        if (patientVisitId != null) {
+            conditions.add("patient_visit_id = ?");
+            values.add(patientVisitId);
+        }
+        jdbcTemplate.update(String.format(DELETE_ALL + SELECT_WHERE,
+                String.join(" AND ", conditions)), values.toArray());
     }
 
     @Override

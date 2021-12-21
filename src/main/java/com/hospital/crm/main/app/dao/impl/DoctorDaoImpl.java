@@ -23,6 +23,7 @@ public class DoctorDaoImpl implements DoctorDao {
     private static final String SELECT_BY_ID = "SELECT * FROM hospital_crm.doctor WHERE id = ?";
     private static final String SELECT_BY_IDS = "SELECT * FROM hospital_crm.doctor WHERE id in (?)";
     private static final String SELECT_ALL = "SELECT * FROM hospital_crm.doctor";
+    private static final String DELETE_ALL = "DELETE FROM hospital_crm.doctor";
     private static final String SELECT_WHERE = " WHERE %s";
     private static final String INSERT = "INSERT INTO hospital_crm.doctor (first_name, last_name, birthday, office_id, sex, phone) values(?, ?, ?, ?, ?::hospital_crm.sex, ?)";
     private static final String UPDATE = "UPDATE hospital_crm.doctor SET (first_name, last_name, birthday, office_id, sex, phone) = (?, ?, ?, ?, ?::hospital_crm.sex, ?) WHERE id = ?";
@@ -113,6 +114,53 @@ public class DoctorDaoImpl implements DoctorDao {
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());
+    }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        if (filter == null || filter.isEmpty()) {
+            jdbcTemplate.update(DELETE_ALL);
+        }
+        int size = filter.size();
+        List<String> conditions = new ArrayList<>(size);
+        String idValue = filter.get("id");
+        List<Object> values = new ArrayList<>(size);
+        if (idValue != null) {
+            conditions.add("id = ?");
+            values.add(UUID.fromString(idValue));
+        }
+        String firstNameValue = filter.get("first_name");
+        if (firstNameValue != null) {
+            conditions.add("first_name = ?");
+            values.add(firstNameValue);
+        }
+        String secondNameValue = filter.get("last_name");
+        if (secondNameValue != null) {
+            conditions.add("last_name = ?");
+            values.add(secondNameValue);
+        }
+        String birthdayValue = filter.get("birthday");
+        if (birthdayValue != null) {
+            conditions.add("birthday = ?");
+            values.add(birthdayValue);
+        }
+        String officeId = filter.get("office_id");
+        if (officeId != null) {
+            conditions.add("office_id = ?");
+            values.add(officeId);
+        }
+        String sex = filter.get("sex");
+        if (sex != null) {
+            conditions.add("sex = ?");
+            values.add(sex);
+        }
+        String phone = filter.get("phone");
+        if (phone != null) {
+            conditions.add("phone = ?");
+            values.add(phone);
+        }
+        jdbcTemplate.update(String.format(DELETE_ALL + SELECT_WHERE,
+                String.join(" AND ", conditions)), values.toArray());
     }
 
     @Override

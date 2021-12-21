@@ -11,5 +11,6 @@ public interface BaseEntityDao<E> {
 
     List<E> get(Map<String, String> filter);
 
+    void delete(Map<String, String> filter);
 
 }

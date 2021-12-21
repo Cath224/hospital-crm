@@ -1,11 +1,9 @@
 package com.hospital.crm.main.app.controller;
 
 import com.hospital.crm.main.app.service.api.BaseEntityService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +21,18 @@ public abstract class BaseEntityController<E> {
 
 
     @PostMapping
-    public E create(@RequestBody E entity) {
+    public E create(@Valid @RequestBody E entity) {
         return baseEntityService.create(entity);
     }
 
     @GetMapping
     public List<E> get(@RequestParam(name = "filter", required = false) String filter) {
         return baseEntityService.get(parseFilter(filter));
+    }
+
+    @DeleteMapping
+    public void delete(@RequestParam(name = "filter", required = false) String filter) {
+        baseEntityService.delete(parseFilter(filter));
     }
 
     protected Map<String, String> parseFilter(String filter) {
@@ -46,8 +49,7 @@ public abstract class BaseEntityController<E> {
             if (filterConditionParts.length == 0) {
                 continue;
             }
-            filterParsed.put(filterConditionParts[0],
-                    toSnakeCase(filterConditionParts[1]));
+            filterParsed.put(toSnakeCase(filterConditionParts[0]), filterConditionParts[1]);
         }
         return filterParsed;
     }

@@ -3,6 +3,8 @@ package com.hospital.crm.main.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,10 +13,15 @@ import java.util.UUID;
 public class Person {
 
     private UUID id;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
+    @NotBlank
     private String sex;
+    @NotNull
     private LocalDate birthday;
+    @NotBlank
     private String phone;
 
     public UUID getId() {

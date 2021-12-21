@@ -26,6 +26,7 @@ public class DoctorExperienceDaoImpl implements DoctorExperienceDao {
 
     private static final String SELECT_BY_ID = "SELECT * FROM hospital_crm.doctor_experience WHERE doctor_id = ? AND branch_id = ?";
     private static final String SELECT_ALL = "SELECT * FROM hospital_crm.doctor_experience";
+    private static final String DELETE_ALL = "DELETE FROM hospital_crm.doctor_experience";
     private static final String SELECT_WHERE = " WHERE %s";
     private static final String INSERT = "INSERT INTO hospital_crm.doctor_experience (doctor_id, branch_id, start_practicing_date) values(?, ?, ?)";
     private static final String UPDATE = "UPDATE hospital_crm.doctor_experience SET (start_practicing_date) = (?) WHERE doctor_id = ? AND branch_id = ?";
@@ -89,5 +90,32 @@ public class DoctorExperienceDaoImpl implements DoctorExperienceDao {
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());
+    }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        if (filter == null || filter.isEmpty()) {
+            jdbcTemplate.update(DELETE_ALL);
+        }
+        int size = filter.size();
+        List<String> conditions = new ArrayList<>(size);
+        String doctorId = filter.get("doctor_id");
+        List<Object> values = new ArrayList<>(size);
+        if (doctorId != null) {
+            conditions.add("doctor_id = ?");
+            values.add(UUID.fromString(doctorId));
+        }
+        String branchId = filter.get("branch_id");
+        if (branchId != null) {
+            conditions.add("branch_id = ?");
+            values.add(UUID.fromString(branchId));
+        }
+        String startPracticingDate = filter.get("start_practicing_date");
+        if (startPracticingDate != null) {
+            conditions.add("start_practicing_date = ?");
+            values.add(LocalDate.parse(startPracticingDate));
+        }
+        jdbcTemplate.update(String.format(DELETE_ALL + SELECT_WHERE,
+                String.join(" AND ", conditions)), values.toArray());
     }
 }

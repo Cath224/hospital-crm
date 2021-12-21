@@ -10,4 +10,6 @@ public interface BaseEntityService<E> {
     E update(E entity);
 
     List<E> get(Map<String, String> filter);
+
+    void delete(Map<String, String> filter);
 }

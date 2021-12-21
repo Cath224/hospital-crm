@@ -2,6 +2,8 @@ package com.hospital.crm.main.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,9 +11,12 @@ import java.util.UUID;
 public class Medication {
 
     private UUID id;
+    @NotNull
     private UUID branchId;
+    @NotBlank
     private String name;
     private String description;
+    @NotBlank
     private String serialNumber;
     private String indications;
     private String contraindications;

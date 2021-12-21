@@ -23,6 +23,7 @@ public class OfficeDaoImpl implements OfficeDao {
     private static final String SELECT_BY_ID = "SELECT * FROM hospital_crm.office WHERE id = ?";
     private static final String SELECT_BY_IDS = "SELECT * FROM hospital_crm.office WHERE id in (?)";
     private static final String SELECT_ALL = "SELECT * FROM hospital_crm.office";
+    private static final String DELETE_ALL = "DELETE FROM hospital_crm.office";
     private static final String SELECT_WHERE = " WHERE %s";
     private static final String INSERT = "INSERT INTO hospital_crm.office (name, number) values(?, ?)";
     private static final String UPDATE = "UPDATE hospital_crm.office SET (name, number) = (?, ?) WHERE id = ?";
@@ -85,6 +86,33 @@ public class OfficeDaoImpl implements OfficeDao {
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());
+    }
+
+    @Override
+    public void delete(Map<String, String> filter) {
+        if (filter == null || filter.isEmpty()) {
+            jdbcTemplate.update(DELETE_ALL);
+        }
+        int size = filter.size();
+        List<String> conditions = new ArrayList<>(size);
+        String idValue = filter.get("id");
+        List<Object> values = new ArrayList<>(size);
+        if (idValue != null) {
+            conditions.add("id = ?");
+            values.add(UUID.fromString(idValue));
+        }
+        String nameValue = filter.get("name");
+        if (nameValue != null) {
+            conditions.add("name = ?");
+            values.add(nameValue);
+        }
+        String numberValue = filter.get("number");
+        if (numberValue != null) {
+            conditions.add("number = ?");
+            values.add(numberValue);
+        }
+        jdbcTemplate.update(String.format(DELETE_ALL + SELECT_WHERE,
+                String.join(" AND ", conditions)), values.toArray());
     }
 
     @Override

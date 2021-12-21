@@ -13,8 +13,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 @Order(1)
-@Component
-public class OnApplicationStartup implements InitializingBean {
+@Component("OnApplicationStartupPropertiesSet")
+public class OnApplicationStartupPropertiesSet implements InitializingBean {
 
     private static final String CHECK_DATABASE_EXISTS_SQL = "SELECT COUNT(datname) FROM pg_database WHERE datname = '%s'";
     private static final String CREATE_DATABASE_NAME_TEMPLATE_SQL = "CREATE DATABASE %s";

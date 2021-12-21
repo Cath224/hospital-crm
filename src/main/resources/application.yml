@@ -10,3 +10,7 @@ spring:
     rdms-url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}
     database-name: hospital
     rdms-url-full: ${spring.datasource.rdms-url}/${spring.datasource.database-name}
+
+hospital-crm:
+  debug:
+    enabled: false

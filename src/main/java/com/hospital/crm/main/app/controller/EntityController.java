@@ -3,6 +3,8 @@ package com.hospital.crm.main.app.controller;
 import com.hospital.crm.main.app.service.api.EntityService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 public abstract class EntityController<E, Id> extends BaseEntityController<E> {
 
 
@@ -15,7 +17,7 @@ public abstract class EntityController<E, Id> extends BaseEntityController<E> {
     }
 
     @PutMapping("{id}")
-    public E update(@PathVariable Id id, @RequestBody E entity) {
+    public E update(@PathVariable Id id, @Valid @RequestBody E entity) {
         setId(id, entity);
         return entityService.update(entity);
     }
