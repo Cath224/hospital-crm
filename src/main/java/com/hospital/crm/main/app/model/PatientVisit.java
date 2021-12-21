@@ -16,6 +16,9 @@ public class PatientVisit {
     private UUID doctorId;
     @NotNull
     private UUID patientId;
+    @NotNull
+    private UUID branchId;
+
     private LocalDateTime actualTimestamp;
     @NotBlank
     private LocalDateTime planedTimestamp;
@@ -61,20 +64,24 @@ public class PatientVisit {
         this.planedTimestamp = planedTimestamp;
     }
 
+    public UUID getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(UUID branchId) {
+        this.branchId = branchId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof PatientVisit)) return false;
         PatientVisit that = (PatientVisit) o;
-        return actualTimestamp == that.actualTimestamp &&
-                planedTimestamp == that.planedTimestamp &&
-                id.equals(that.id) &&
-                doctorId.equals(that.doctorId) &&
-                patientId.equals(that.patientId);
+        return Objects.equals(id, that.id) && Objects.equals(doctorId, that.doctorId) && Objects.equals(patientId, that.patientId) && Objects.equals(branchId, that.branchId) && Objects.equals(actualTimestamp, that.actualTimestamp) && Objects.equals(planedTimestamp, that.planedTimestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, doctorId, patientId, actualTimestamp, planedTimestamp);
+        return Objects.hash(id, doctorId, patientId, branchId, actualTimestamp, planedTimestamp);
     }
 }

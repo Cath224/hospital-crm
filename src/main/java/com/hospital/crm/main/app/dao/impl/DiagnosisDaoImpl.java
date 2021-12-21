@@ -81,7 +81,7 @@ public class DiagnosisDaoImpl implements DiagnosisDao {
         String patientVisitId = filter.get("patient_visit_id");
         if (patientVisitId != null) {
             conditions.add("patient_visit_id = ?");
-            values.add(patientVisitId);
+            values.add(UUID.fromString(patientVisitId));
         }
         return jdbcTemplate.query(String.format(SELECT_ALL + SELECT_WHERE,
                 String.join(" AND ", conditions)), MAPPER, values.toArray());

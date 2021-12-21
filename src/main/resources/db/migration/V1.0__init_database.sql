@@ -1,6 +1,6 @@
 create schema if not exists hospital_crm;
 
-create table hospital_crm.branch
+create table if not exists hospital_crm.branch
 (
     id   uuid default gen_random_uuid() not null
         constraint branch_pk
@@ -9,10 +9,10 @@ create table hospital_crm.branch
 );
 
 
-create unique index branch_name_uindex
+create unique index if not exists branch_name_uindex
     on hospital_crm.branch (name);
 
-create table hospital_crm.office
+create table if not exists hospital_crm.office
 (
     id     uuid default gen_random_uuid() not null
         constraint office_pk
@@ -22,18 +22,23 @@ create table hospital_crm.office
 );
 
 
-create unique index office_number_uindex
+create unique index if not exists office_number_uindex
     on hospital_crm.office (number);
 
-create table hospital_crm.person
+drop type if exists hospital_crm.sex cascade;
+create type hospital_crm.sex as enum ('M', 'F');
+
+create table if not exists hospital_crm.person
 (
     first_name text,
     last_name  text,
-    birthday   date not null
+    birthday   date not null,
+    phone text,
+    sex   hospital_crm.sex not null default 'M'
 );
 
 
-create table hospital_crm.doctor
+create table if not exists hospital_crm.doctor
 (
     id         uuid default gen_random_uuid() not null
         constraint doctor_pk
@@ -47,17 +52,17 @@ create table hospital_crm.doctor
 )
     inherits (hospital_crm.person);
 
-create index doctor_office_id_index
+create index if not exists doctor_office_id_index
     on hospital_crm.doctor (office_id);
 
-create table hospital_crm.doctor_experience
+create table if not exists hospital_crm.doctor_experience
 (
     doctor_id             uuid not null
         constraint doctor_experience_doctor_id_fk
-            references hospital_crm.doctor,
+            references hospital_crm.doctor on delete cascade,
     branch_id             uuid not null
         constraint doctor_experience_branch_id_fk
-            references hospital_crm.branch,
+            references hospital_crm.branch on delete cascade,
     start_practicing_date date not null,
     constraint doctor_experience_pk
         primary key (doctor_id, branch_id)
@@ -65,7 +70,7 @@ create table hospital_crm.doctor_experience
 
 
 
-create table hospital_crm.patient
+create table if not exists hospital_crm.patient
 (
     id uuid not null
         constraint patient_pk
@@ -74,10 +79,10 @@ create table hospital_crm.patient
     inherits (hospital_crm.person);
 
 
-create table hospital_crm.patient_visit
+create table if not exists hospital_crm.patient_visit
 (
-    doctor_id        uuid                     not null,
-    patient_id       uuid                     not null,
+    doctor_id        uuid                     not null references doctor(id) on delete cascade,
+    patient_id       uuid                     not null references patient(id) on delete cascade,
     actual_timestamp timestamp with time zone not null,
     id               uuid                     not null
         constraint patient_visit_pk
@@ -85,10 +90,10 @@ create table hospital_crm.patient_visit
     planed_timestamp timestamp with time zone not null
 );
 
-create index patient_visit_planed_timestamp_index
+create index if not exists patient_visit_planed_timestamp_index
     on hospital_crm.patient_visit (planed_timestamp desc);
 
-create table hospital_crm.medication
+create table if not exists hospital_crm.medication
 (
     id                uuid              not null
         constraint medication_pk
@@ -105,16 +110,16 @@ create table hospital_crm.medication
     number            integer default 0 not null
 );
 
-create index medication_branch_id_index
+create index if not exists medication_branch_id_index
     on hospital_crm.medication (branch_id);
 
-create unique index medication_name_uindex
+create unique index if not exists medication_name_uindex
     on hospital_crm.medication (name);
 
-create unique index medication_serial_number_uindex
+create unique index if not exists medication_serial_number_uindex
     on hospital_crm.medication (serial_number);
 
-create table hospital_crm.diagnosis
+create table if not exists hospital_crm.diagnosis
 (
     id               uuid not null
         constraint diagnosis_pk
@@ -127,10 +132,10 @@ create table hospital_crm.diagnosis
 );
 
 
-create index diagnosis_patient_visit_id_index
+create index if not exists diagnosis_patient_visit_id_index
     on hospital_crm.diagnosis (patient_visit_id);
 
-create table hospital_crm.diagnosis_medicine
+create table if not exists hospital_crm.diagnosis_medicine
 (
     diagnosis_id uuid              not null
         constraint diagnosis_medicine_diagnosis_id_fk

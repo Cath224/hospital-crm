@@ -8,7 +8,7 @@ import java.util.Map;
 
 public abstract class BaseEntityServiceImpl<E> implements BaseEntityService<E> {
 
-    private final BaseEntityDao<E> baseEntityDao;
+    protected final BaseEntityDao<E> baseEntityDao;
 
     protected BaseEntityServiceImpl(BaseEntityDao<E> baseEntityDao) {
         this.baseEntityDao = baseEntityDao;

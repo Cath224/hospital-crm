@@ -8,7 +8,7 @@ import java.util.Set;
 
 public abstract class EntityServiceImpl<E, Id> extends BaseEntityServiceImpl<E> implements EntityService<E, Id> {
 
-    private final EntityDao<E, Id> entityDao;
+    protected final EntityDao<E, Id> entityDao;
 
 
     protected EntityServiceImpl(EntityDao<E, Id> entityDao) {
