@@ -90,6 +90,13 @@ create table if not exists hospital_crm.patient_visit
     planed_timestamp timestamp with time zone not null
 );
 
+
+create index if not exists patient_visit_doctor_id
+    on hospital_crm.patient_visit (doctor_id desc);
+
+create index if not exists patient_visit_patient_id
+    on hospital_crm.patient_visit (patient_id desc);
+
 create index if not exists patient_visit_planed_timestamp_index
     on hospital_crm.patient_visit (planed_timestamp desc);
 
